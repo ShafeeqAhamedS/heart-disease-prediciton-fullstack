@@ -1,6 +1,5 @@
 from flask import Flask, request, jsonify, render_template
 from pymongo import MongoClient
-from config import Config
 from flask_cors import CORS
 import numpy as np
 from sklearn.preprocessing import StandardScaler
@@ -8,7 +7,6 @@ import tensorflow as tf
 from bson import json_util
 
 app = Flask(__name__)
-app.config.from_object(Config)
 CORS(app)
 
 scaler = StandardScaler()
@@ -16,7 +14,7 @@ model = tf.keras.models.load_model('./heart_disease_model.h5')
 
 client = MongoClient('mongodb+srv://root:root@cluster0.yx4htz5.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
 db = client['predicateDB']  # Replace with your database name
-collection = db['predictions']
+collection = db['prediction']
 
 # Routes
 @app.route('/')
@@ -26,7 +24,8 @@ def home():
 @app.route('/predict', methods=['POST'])
 def predict():
     data = request.json
-
+    name = data['name']
+    id = int(data['id'])
     age = int(data['age'])
     sex = int(data['sex'])
     chest_pain_type = int(data['chest_pain_type'])
@@ -43,6 +42,8 @@ def predict():
 
     # Prepare the input data for prediction
     input_data = {
+        'name': name,
+        'id': id,
         'age': age,
         'sex': sex,
         'chest_pain_type': chest_pain_type,
