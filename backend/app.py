@@ -1,14 +1,22 @@
 from flask import Flask, request, jsonify, render_template
-from flask_pymongo import PyMongo
+from pymongo import MongoClient
 from config import Config
 from flask_cors import CORS
 import numpy as np
 from sklearn.preprocessing import StandardScaler
 import tensorflow as tf
+from bson import json_util
 
 app = Flask(__name__)
 app.config.from_object(Config)
 CORS(app)
+
+scaler = StandardScaler()
+model = tf.keras.models.load_model('./heart_disease_model.h5')
+
+client = MongoClient('mongodb+srv://root:root@cluster0.yx4htz5.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
+db = client['predicateDB']  # Replace with your database name
+collection = db['predictions']
 
 # Routes
 @app.route('/')
@@ -34,14 +42,26 @@ def predict():
     thallium = int(data['thallium'])
 
     # Prepare the input data for prediction
-    input_data = [[age, sex, chest_pain_type, bp, cholesterol, fbs_over_120,
-                   ekg_results, max_hr, exercise_angina, st_depression,
-                   slope_of_st, num_vessels_fluro, thallium]]
-
-    # Normalize the input data
-    scaled_data = scaler.fit_transform(input_data)
+    input_data = {
+        'age': age,
+        'sex': sex,
+        'chest_pain_type': chest_pain_type,
+        'bp': bp,
+        'cholesterol': cholesterol,
+        'fbs_over_120': fbs_over_120,
+        'ekg_results': ekg_results,
+        'max_hr': max_hr,
+        'exercise_angina': exercise_angina,
+        'st_depression': st_depression,
+        'slope_of_st': slope_of_st,
+        'num_vessels_fluro': num_vessels_fluro,
+        'thallium': thallium
+    }
 
     # Predict using the loaded model
+    scaled_data = scaler.fit_transform([[age, sex, chest_pain_type, bp, cholesterol, fbs_over_120,
+                                      ekg_results, max_hr, exercise_angina, st_depression,
+                                      slope_of_st, num_vessels_fluro, thallium]])
     prediction = model.predict(scaled_data)
     predicted_class = np.round(prediction).astype(int)[0, 0]
 
@@ -51,9 +71,25 @@ def predict():
     else:
         result = 'Heart disease detected'
 
+    # Save the prediction to the database
+    input_data['prediction'] = result
+    data = collection.insert_one(input_data)
+    print(data.inserted_id)
+
     # Return JSON response
     return jsonify({'result': result})
 
+@app.route('/history', methods=['GET'])
+def history():
+    data = collection.find({})
+    json_data = json_util.dumps(list(data))  # Serialize MongoDB documents
+    return json_data, 200  # Return as JSON with HTTP status code
+
+@app.route('/add', methods=['POST'])
+def add():
+    data = request.json
+    collection.insert_one(data)
+    return jsonify({'message': 'Data added successfully'}), 201
 
 if __name__ == '__main__':
     app.run(debug=True)
