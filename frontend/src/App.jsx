@@ -1,16 +1,37 @@
-import React from 'react'
-import PredictComponent from './components/PredictComponent/PredictComponent'
-import HistoryComponent from './components/HistoryComponent/HistoryComponent'
-import AddDataComponent from './components/AddDataComponent/AddDataComponent'
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import PredictComponent from './components/PredictComponent/PredictComponent';
+import HistoryComponent from './components/HistoryComponent/HistoryComponent';
+import AddDataComponent from './components/AddDataComponent/AddDataComponent';
 
 const App = () => {
   return (
     <>
-    <PredictComponent/>
-    <HistoryComponent/>
-    <AddDataComponent/>
-    </>
-  )
-}
+      <h1>Heart Disease Prediction</h1>
+      
+      <Router>
+        <Routes>
+          <Route path="/predict" element={<PredictComponent />} />
+          <Route path="/history" element={<HistoryComponent />} />
+          <Route path="/add" element={<AddDataComponent />} />
+        </Routes>
 
-export default App
+        <nav>
+          <ul>
+            <li>
+              <Link to="/predict">Predict</Link>
+            </li>
+            <li>
+              <Link to="/history">History</Link>
+            </li>
+            <li>
+              <Link to="/add">Add Data</Link>
+            </li>
+          </ul>
+        </nav>
+      </Router>
+    </>
+  );
+};
+
+export default App;
