@@ -7,7 +7,7 @@ function PredictComponent() {
     name: '',
     id: 0,
     age: 70,
-    sex: 1,
+    sex: 0,
     chest_pain_type: 4,
     bp: 130,
     cholesterol: 322,
@@ -63,7 +63,10 @@ function PredictComponent() {
         <input type="number" id="age" name="age" value={formData.age} onChange={handleInputChange} className="input-field border border-black p-2 mb-4 w-full" />
 
         <label htmlFor="sex" className="font-bold block mb-2">Sex:</label>
-        <input type="number" id="sex" name="sex" value={formData.sex} onChange={handleInputChange} className="input-field border border-black p-2 mb-4 w-full" />
+        <select id="sex" name="sex" value={formData.sex} onChange={handleInputChange} className="input-field border border-black p-2 mb-4 w-full">
+          <option value="0">Male</option>
+          <option value="1">Female</option>
+        </select>
 
         <label htmlFor="chest_pain_type" className="font-bold block mb-2">Chest pain type:</label>
         <input type="number" id="chest_pain_type" name="chest_pain_type" value={formData.chest_pain_type} onChange={handleInputChange} className="input-field border border-black p-2 mb-4 w-full" />

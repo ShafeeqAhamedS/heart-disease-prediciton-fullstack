@@ -134,8 +134,8 @@ const AddDataComponent = () => {
                     <label htmlFor="prediction" className="font-bold block mb-2">Prediction:</label>
                     <select id="prediction" name="prediction" value={formData.prediction} onChange={handleChange} className="input-field border border-black p-2 w-full" required>
                         <option value="">Select Prediction</option>
-                        <option value="0">No Heart Disease</option>
-                        <option value="1">Heart Disease</option>
+                        <option value="No Heart Disease">No Heart Disease</option>
+                        <option value="Heart Disease">Heart Disease</option>
                     </select>
                 </div>
                 <button type="submit" className="btn-primary mt-6 block w-full border border-green-200 p-3 bg-green-200">Add Data</button>
