@@ -5,6 +5,9 @@ import numpy as np
 from sklearn.preprocessing import StandardScaler
 import tensorflow as tf
 from bson import json_util
+from dotenv import load_dotenv
+import os
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
@@ -12,7 +15,11 @@ CORS(app)
 scaler = StandardScaler()
 model = tf.keras.models.load_model('./heart_disease_model.h5')
 
-client = MongoClient('mongodb+srv://root:root@cluster0.yx4htz5.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
+# From .env file import MONOGO_URL
+
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+client = MongoClient(DATABASE_URL)
 db = client['predicateDB']  # Replace with your database name
 collection = db['prediction']
 
