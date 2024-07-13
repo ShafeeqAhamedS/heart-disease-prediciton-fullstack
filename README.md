@@ -1,14 +1,12 @@
 # Heart Disease Prediction Fullstack Application
 
-This repository contains a fullstack application for predicting heart disease using a machine learning model. The backend is powered by Flask, and the frontend is built with appropriate web technologies.
+This repository contains a full stack application for predicting heart disease using a deep-learning model. Flask powers the backend, and the front end is built with Vite + react.
 
 ## Table of Contents
 
 - [Installation](#installation)
 - [Usage](#usage)
 - [Demo](#demo)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## Installation
 
@@ -46,18 +44,15 @@ source venv/bin/activate
 
 #### Backend
 Install the required packages using the `requirements.txt` file:
-
 ```bash
 pip install -r requirements.txt
 ```
 
 #### Frontend
-Start the frontend application:
-
 From the root directory of the project, navigate to the `frontend` directory:
 ```bash
 cd frontend
-npm start
+npm install
 ```
 
 ### Environment Variables
